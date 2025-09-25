@@ -143,5 +143,5 @@
 
 <br>
 
-![license](https://img.shields.io/github/license/Rafimayo/Jerry-md?color=green&label=License&style=plastic)
+![license](https://img.shields.io/github/license/JERRYMDVI/LEGEND-JERRY-MD?color=green&label=License&style=plastic)
 
