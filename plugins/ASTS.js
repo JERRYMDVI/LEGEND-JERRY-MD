@@ -20,7 +20,7 @@ cmd({
     await reply("```🔍 CHECKING UPDATE FOR JERRY-MD 💨```\n");  
       
     // Get latest commit from GitHub  
-    const { data: commitData } = await axios.get("https://api.github.com/repos/Rafimayo/Jerry-md/commits/main");  
+    const { data: commitData } = await axios.get("https://api.github.com/repos/JERRYMDV1/LEGEND-JERRY-MD/commits/main");  
     const latestCommitHash = commitData.sha;  
 
     // Get current commit hash  
@@ -40,7 +40,7 @@ cmd({
       
     // Download latest code  
     const zipPath = path.join(__dirname, "latest.zip");  
-    const { data: zipData } = await axios.get("https://github.com/Rafimayo/Jerry-md/archive/main.zip", { responseType: "arraybuffer" });  
+    const { data: zipData } = await axios.get("https://github.com/JERRYMDV1/LEGEND-JERRY-MD/archive/main.zip", { responseType: "arraybuffer" });  
     fs.writeFileSync(zipPath, zipData);  
 
     await reply("```📦 EXTRACTING THE LATEST CODE...```\n");  
@@ -53,7 +53,7 @@ cmd({
     await reply("```🔄 REPLACING FILES 📂...```\n");  
       
     // Copy updated files, skipping config.js and app.json  
-    const sourcePath = path.join(extractPath, "Jerry-md");  
+    const sourcePath = path.join(extractPath, "LEGEND-JERRY-MD");  
     const destinationPath = path.join(__dirname, '..');  
     copyFolderSync(sourcePath, destinationPath);  
 
