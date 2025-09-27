@@ -3,7 +3,7 @@ const yts = require('yt-search');
 const axios = require('axios');
 
 cmd({
-    pattern: "ytmp4",
+    pattern: "video",
     alias: ["video", "song", "ytv"],
     desc: "Download YouTube videos",
     category: "downloader",
