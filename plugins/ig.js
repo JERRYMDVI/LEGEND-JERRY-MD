@@ -31,7 +31,7 @@ if(config.LANG === 'SI') cantf = '*මට මෙම වීඩියෝව සො
 else cantf = "*I cant find this video!*" 
 cmd({
     pattern: "ig",
-    alias: ["igstory"],
+    alias: ["igstory","insta"],
     react: '🎀',
     desc: "Download instagram videos/photos.",
     category: "download",
