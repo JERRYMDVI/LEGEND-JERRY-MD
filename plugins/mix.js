@@ -288,7 +288,7 @@ cmd({
       }
       let _0x550c53 = new Sticker(_0x534953 + ".jpg", {
         'pack': _0x4f2c74,
-        'author': 'ѕเℓεɳƭ_ℓσѵε૨⛱️♥️',
+        'author': 'ᴊᴇʀʀʏ☠︎︎ᴍᴅᴅ',
         'type': _0x288ad4.includes("--crop" || '-c') ? StickerTypes.CROPPED : StickerTypes.FULL,
         'categories': ['🤩', '🎉'],
         'id': "12345",
