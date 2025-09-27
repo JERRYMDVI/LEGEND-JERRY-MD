@@ -32,7 +32,7 @@ cmd({
 async (conn,mek, m, { from, body, isGroup, isAdmins, isBotAdmins, reply, sender }) => {
     try {
     
-        const badWords = ["wtf", "mia", "xxx","fuck","sex","huththa","pakaya","ponnaya","hutto"]
+        const badWords = ["sexy", "mia", "xxx","fuck","sex","huththa","pakaya","ponnaya","hutto"]
         if (!isGroup || isAdmins || !isBotAdmins) return; // Skip if not in group, or sender is admin, or bot is not admin
       
         const lowerCaseMessage = body.toLowerCase();
