@@ -91,7 +91,7 @@ reply(`${e}`)
    
 
 cmd({
-  pattern: "video",
+  pattern: "video6",
     alias: ["ytvideo"],
     desc: 'Download Song / Video',
     use: '.play Title',
