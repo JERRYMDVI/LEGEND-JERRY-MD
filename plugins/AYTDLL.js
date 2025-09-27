@@ -1,89 +1,55 @@
-//==========================================
-const { cmd, commands } = require('../command');
-const { fetchJson } = require('../lib/functions');
-const domain = `https://manu-ofc-api-site-6bfcbe0e18f6.herokuapp.com`;
-const api_key = `MY-VIDEO-OFC`;
+const { cmd } = require('../command');
 const yts = require('yt-search');
-//===========================================
-//===========================================
-    cmd({
-    pattern: "video3",
-    desc: 'Download Song / Video',
-    use: '.play Title',
-    react: "🎬",
-    category: 'download',
+const axios = require('axios');
+
+cmd({
+    pattern: "ytmp4",
+    alias: ["video", "song", "ytv"],
+    desc: "Download YouTube videos",
+    category: "downloader",
+    react: "📹",
     filename: __filename
-},
-async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
- 
+}, async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
     try {
-        if (!q) return reply('Please provide a title.');
+        if (!q) return await reply("📺 Please provide video name or URL!\n\nExample: .video funny cat");
 
-        const search = await yts(q);
-        const data = search.videos[0];
-        const url = data.url;
+        // Search on YouTube if query is not a link
+        let url = q;
+        if (!q.includes("youtube.com") && !q.includes("youtu.be")) {
+            const { videos } = await yts(q);
+            if (!videos || videos.length === 0) return await reply("❌ No results found!");
+            url = videos[0].url;
+        }
 
-        let desc = `
-*╭━━〔 ᴊᴇʀʀʏ-ᴍᴅ ᴠɪᴅᴇᴏ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ 〕━━┈⊷*
-        
-> *\`➤ Title\` :* ${data.title}
+        const api = `https://gtech-api-xtp1.onrender.com/api/video/yt?apikey=APIKEY&url=${encodeURIComponent(url)}`;
+        const res = await axios.get(api);
+        const json = res.data;
 
-> *\`➤ Views\` :* ${data.views}
+        if (!json?.status || !json?.result?.media) {
+            return await reply("❌ Download failed! Try again later.");
+        }
 
-> *\`➤ DESCRIPTION\`:* ${data.description}
+        const media = json.result.media;
+        const videoUrl = media.video_url_hd !== "No HD video URL available"
+            ? media.video_url_hd
+            : media.video_url_sd !== "No SD video URL available"
+                ? media.video_url_sd
+                : null;
 
-> *\`➤ TIME\`:* ${data.timestamp}
+        if (!videoUrl) return await reply("❌ No downloadable video found!");
 
-> *\`➤ AGO\`:* ${data.ago}
+        // Send video
+        await conn.sendMessage(from, {
+            video: { url: videoUrl },
+            caption: `> *${media.title} Downloaded Successfully ✅*`
+        }, { quoted: mek });
 
-*◄❪ 🆁ᴇᴘʟʏ ᴛʜɪs ɴᴜᴍʙᴇʀ ᴡʜᴀᴛ ʏᴏᴜ ᴡᴀɴᴛ ♡ ❫►*
-
-1. *🅅ɪᴅᴇᴏ 🎬*
-2. *🄳ᴏᴄᴜᴍᴇɴᴛ 🗂️*
-
-> *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴍʀ.ᴊᴇʀʀʏ♡*
-`;
-
-        const vv = await conn.sendMessage(from, { image: { url: data.thumbnail }, caption: desc }, { quoted: mek });
-
-        conn.ev.on('messages.upsert', async (msgUpdate) => {
-            const msg = msgUpdate.messages[0];
-            if (!msg.message || !msg.message.extendedTextMessage) return;
-
-            const selectedOption = msg.message.extendedTextMessage.text.trim();
-
-            if (msg.message.extendedTextMessage.contextInfo && msg.message.extendedTextMessage.contextInfo.stanzaId === vv.key.id) {
-                switch (selectedOption) {
-                    case '1':
-
-    const response = await fetchJson(`${domain}/ytmp4-dl?apikey=${api_key}&videoUrl=${url}&resolution=360`);
-    
-    const downloadUrl = response.data.dl_link;
-
-
-await conn.sendMessage(from,{video:{url: downloadUrl },mimetype:"video/mp4",caption :"> POWERED BY SILENTLOVER432💚"},{quoted:mek})
-                        break;
-       
-                    case '2':               
-                        // Send Document File
-    const responsex = await fetchJson(`${domain}/ytmp4-dl?apikey=${api_key}&videoUrl=${url}&resolution=360`);
-    
-    const downloadUrlx = responsex.data.dl_link;
-
-await conn.sendMessage(from,{document:{url: downloadUrlx },mimetype:"video/mp4",fileName: data.title + ".mp4",caption :"> POWERED BY SILENTLOVER432💚"},{quoted:mek})
-                        break;
- 
-                    default:
-                        reply("Invalid option. Please select a valid option 💗");
-                }
-
-            }
-        });
+        // Success reaction
+        await conn.sendMessage(from, { react: { text: '✅', key: m.key } });
 
     } catch (e) {
-        console.error(e);
-        await conn.sendMessage(from, { react: { text: '❌', key: mek.key } })
-        reply('An error occurred while processing your request.');
+        console.error("Error in .video:", e);
+        await reply("❌ Error occurred, try again later!");
+        await conn.sendMessage(from, { react: { text: '❌', key: m.key } });
     }
 });
-//=============©POWERD BY MR.JERRY========
