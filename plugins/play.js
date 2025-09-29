@@ -1,63 +1,185 @@
-/*created by Silent_killer469 🕵
-contact me 923130433361♻️
-© Copy coder alert ⚠
-*/const config = require('../config');
-const { cmd } = require('../command');
-const { ytsearch } = require('@dark-yasiya/yt-dl.js'); 
+const { cmd, commands } = require('../lib/command');
+const yts = require('yt-search');
+const { fetchJson } = require('../lib/functions');
+const  { ytmp3 }= require('./lib/scrap')
 
-// play
+// Function to extract the video ID from youtu.be or YouTube links
+function extractYouTubeId(url) {
+    const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/|playlist\?list=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    const match = url.match(regex);
+    return match ? match[1] : null;
+}
 
-cmd({ 
-     pattern: "play", 
-     alias: ["song", "audio"], 
-     react: "🎶", 
-     desc: "Download Youtube song",
-     category: "main", 
-     use: '.play < Yt url or Name >', 
-     filename: __filename 
-}, async (conn, mek, m, { from, prefix, quoted, q, reply }) => {
+// Function to convert any YouTube URL to a full YouTube watch URL
+function convertYouTubeLink(q) {
+    const videoId = extractYouTubeId(q);
+    if (videoId) {
+        return `https://www.youtube.com/watch?v=${videoId}`;
+    }
+    return q;
+}
+
+cmd({
+    pattern: "song1",
+    alias: ["play"],
+    desc: "To download songs.",
+    react: "🎵",
+    category: "download",
+    filename: __filename
+},
+async (conn, msg, m, { from, quoted, body, isCmd, command, args, q, isGroup, from, fromNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
     try {
-        if (!q) return await reply("❌ Please provide a YouTube URL or song name.");
-
-        // API URL
-        let apiUrl = `https://api.vreden.my.id/api/ytplaymp3?query=${encodeURIComponent(q)}`;
-
-        let response = await fetch(apiUrl);
-        let data = await response.json();
-
-        if (data.status !== 200 || !data.result || !data.result.download?.url) {
-            return reply("⚠️ Failed to fetch the audio. Please try again later.");
+    
+    const lipx = {
+      key: {
+        remoteJid: "status@broadcast",
+        fromMe: false,
+        id: 'FAKE_META_ID_001',
+        participant: '13135550002@s.whatsapp.net'
+      },
+      message: {
+        contactMessage: {
+          displayName: '© Aʅҽxα 🥷',
+          vcard: `BEGIN:VCARD
+VERSION:3.0
+N:Alip;;;;
+FN:Alip
+TEL;waid=13135550002:+1 313 555 0002
+END:VCARD`
         }
+      }
+    };
+        q = convertYouTubeLink(q);
+        if (!q) return reply("*`Need YT_URL or Title`*");
+        const search = await yts(q);
+        const data = search.videos[0];
+        const url = data.url;
 
-        let meta = data.result.metadata;
-        let dl = data.result.download;
+        let desc = `
+┌────────────────⊷⦁⦂⦁
+*─⊷〔*ＹＯＵＴＵＢＥ ＡＵＤＩＯ*〕━⊷*
+ ☘️ *Title:* ${data.title} 🙇‍♂️🫀🎧*\n
+ ⏱️ *Duration:* ${data.timestamp}
+ 📅 *Uploaded:* ${data.ago}
+ 🎭 *Views:* ${data.views}
+└────────────────⊷⦁⦂⦁
+*🔢 Reply below number*
 
-        let ytmsg = `*🎧 DARK-SILENCE-MD YT MP3 DOWNLOADER 🎧*
+ 1 │❯◦ *Audio* 🎶          
+ 2 │❯◦ *Document* 📂     
+ 3 │❯◦ *Voice Note* 🎤   
+
+*👇🏻මේ වගේ ලස්සන සිංදු අහන්න මෙන්න මෙහෙට එන්ඩ අනේහ්....*😚💕
+
+*㋛ ᴘᴏᴡᴇʀᴅ ʙʏ Aʅҽxα🥷*
+`;
+let info = `
+> *㋛ ᴘᴏᴡᴇʀᴅ ʙʏ Aʅҽxα🥷*
+ `;   
+const sentMsg = await conn.sendMessage(from, {
+            image: { url: data.thumbnail},
+            caption: desc,
+  contextInfo: {
+                mentionedJid: ['94742287793@s.whatsapp.net'], // specify mentioned JID(s) if any
+                groupMentions: [],
+                forwardingScore: 1,
+                isForwarded: true,
+                forwardedNewsletterMessageInfo: {
+                    newsletterJid: '120363382823666763@newslette',
+                    newsletterName: "Aʅҽxα 🥷",
+                    serverMessageId: 00
+                }
+            }
+     }, {quoted: lipx});
+     
+     const messageID = sentMsg.key.id; // Save the message ID for later reference
+
+
+        // Listen for the user's response
+        conn.ev.on('messages.upsert', async (messageUpdate) => {
+            const msg = messageUpdate.messages[0];
+            if (!msg.message) return;
+            const messageType = msg.message.conversation || msg.message.extendedTextMessage?.text;
+            const from = msg.key.remoteJid;
+            //const from = msg.key.participant || msg.key.remoteJid;
+
+            // Check if the message is a reply to the previously sent message
+            const isReplyToSentMsg = msg.message.extendedTextMessage && msg.message.extendedTextMessage.contextInfo.stanzaId === messageID;
+
+            if (isReplyToSentMsg) {
+                // React to the user's reply (the "1" or "2" message)
+
+                // React to the upload (sending the file)
+                
+
+                if (messageType === '1') {
+                    // Handle option 1 (Audio File)
+                    await conn.sendMessage(from, { react: { text: '⬇️', key: msg.key } });
+                const result = await ytmp3(url, 'mp3');
+        const downloadLink = result.downloadUrl;
+                await conn.sendMessage(from, { react: { text: '⬆️', key: msg.key } });  
+                    await conn.sendMessage(from, { 
+                        audio: { url: downloadLink }, 
+                        mimetype: "audio/mpeg" ,
+                        contextInfo: {
+                            externalAdReply: {
+                                title: data.title,
+                                body: data.videoId,
+                                mediaType: 1,
+                                sourceUrl: data.url,
+                                thumbnailUrl: data.thumbnail, // This should match the image URL provided above
+                                renderLargerThumbnail: true,
+                                showAdAttribution: true
+                            }
+                        }
+                    
+                    }, { quoted: msg });
+                    await conn.sendMessage(from,);
+                
+                } else if (messageType === '2') {
+                    // Handle option 2 (Document File)
+                    await conn.sendMessage(from, { react: { text: '⬇️', key: msg.key } });
+                    const result = await ytmp3(url, 'mp3');
+        const downloadLink = result.downloadUrl;
+                await conn.sendMessage(from, { react: { text: '⬆️', key: msg.key } });
+                    await conn.sendMessage(from, {
+                        document: { url: downloadLink},
+                        mimetype: "audio/mp3",
+                        fileName: `${data.title}.mp3`, // Ensure `img.allmenu` is a valid image URL or base64 encoded image
+                        caption: info
+                                            
+                      }, { quoted: msg });
+                      await conn.sendMessage(from, );
+                     } else if (messageType === '3') {
+                     await conn.sendMessage(from, { react: { text: '⬇️', key: msg.key } });
+                    const result = await ytmp3(url, 'mp3');
+        const downloadLink = result.downloadUrl;
+                await conn.sendMessage(from, { react: { text: '⬆️', key: msg.key } });  
+                    await conn.sendMessage(from, { 
+                        audio: { url: downloadLink }, 
+                        mimetype: "audio/mpeg" ,
+                        ptt: "true" ,
+                        contextInfo: {
+                            externalAdReply: {
+                                title: data.title,
+                                body: data.videoId,
+                                mediaType: 1,
+                                sourceUrl: data.url,
+                                thumbnailUrl: data.thumbnail, // This should match the image URL provided above
+                                renderLargerThumbnail: true,
+                                showAdAttribution: true
+                            }
+                        }
+                    
+                    }, { quoted: msg });
+                    await conn.sendMessage(from,); 
+                }
+            }
+        });
+    
         
-╭━━❐━⪼
-┇๏ *Title* - ${meta.title}
-┇๏ *Duration* - ${meta.timestamp}
-┇๏ *Views* - ${meta.views}
-┇๏ *Author* - ${meta.author?.name || "JERRY-MD"} 
-╰━━❑━⪼
-> *© POWERD BY JERRY_MD♡*`;
-
-        // Send song details
-        await conn.sendMessage(from, { image: { url: meta.image || meta.thumbnail }, caption: ytmsg }, { quoted: mek });
-
-        // Send audio file
-        await conn.sendMessage(from, { audio: { url: dl.url }, mimetype: "audio/mpeg" }, { quoted: mek });
-
-        // Send document file
-        await conn.sendMessage(from, { 
-            document: { url: dl.url }, 
-            mimetype: "audio/mpeg", 
-            fileName: dl.filename || `${meta.title}.mp3`, 
-            caption: `> *© POWERD BY JERRY_MD♡*`
-        }, { quoted: mek });
-
-    } catch (e) {
-        console.error(e);
-        reply("❌ An error occurred. Please try again later.");
+ } catch (e) {
+        console.log(e);
+        reply(`${e}`);
     }
 });
