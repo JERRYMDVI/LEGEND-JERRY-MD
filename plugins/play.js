@@ -1,7 +1,7 @@
-const { cmd, commands } = require('../lib/command');
+const { cmd, commands } = require('../command');
 const yts = require('yt-search');
 const { fetchJson } = require('../lib/functions');
-const  { ytmp3 }= require('../lib/scrab')
+const  { ytmp3 }= require('../lib/scrap')
 
 // Function to extract the video ID from youtu.be or YouTube links
 function extractYouTubeId(url) {
@@ -26,9 +26,31 @@ cmd({
     react: "🎵",
     category: "download",
     filename: __filename
-},
-async (conn, msg, m, { from, quoted, body, isCmd, command, args, q, isGroup, from, fromNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
-    try {
+}, async (conn, mek, m, {
+  from,
+  quoted,
+  body,
+  isCmd,
+  command,
+  args,
+  q,
+  isGroup,
+  sender,
+  senderNumber,
+  botNumber2,
+  botNumber,
+  pushname,
+  isMe,
+  isOwner,
+  groupMetadata,
+  groupName,
+  participants,
+  groupAdmins,
+  isBotAdmins,
+  isAdmins,
+  reply
+}) => {
+  try {
     
     const lipx = {
       key: {
@@ -39,7 +61,7 @@ async (conn, msg, m, { from, quoted, body, isCmd, command, args, q, isGroup, fro
       },
       message: {
         contactMessage: {
-          displayName: '© Aʅҽxα 🥷',
+          displayName: '© DARK-SILENCE-MD🥷',
           vcard: `BEGIN:VCARD
 VERSION:3.0
 N:Alip;;;;
@@ -57,7 +79,7 @@ END:VCARD`
 
         let desc = `
 ┌────────────────⊷⦁⦂⦁
-*─⊷〔*ＹＯＵＴＵＢＥ ＡＵＤＩＯ*〕━⊷*
+*─⊷〔*DARK-SILENCE-MD MP3 FIND*〕━⊷*
  ☘️ *Title:* ${data.title} 🙇‍♂️🫀🎧*\n
  ⏱️ *Duration:* ${data.timestamp}
  📅 *Uploaded:* ${data.ago}
@@ -69,12 +91,10 @@ END:VCARD`
  2 │❯◦ *Document* 📂     
  3 │❯◦ *Voice Note* 🎤   
 
-*👇🏻මේ වගේ ලස්සන සිංදු අහන්න මෙන්න මෙහෙට එන්ඩ අනේහ්....*😚💕
-
-*㋛ ᴘᴏᴡᴇʀᴅ ʙʏ Aʅҽxα🥷*
+*㋛ POWERED BY DARK-SILENCE-MD🥷*
 `;
 let info = `
-> *㋛ ᴘᴏᴡᴇʀᴅ ʙʏ Aʅҽxα🥷*
+> *㋛ POWERED BY DARK-SILENCE-MD🥷*
  `;   
 const sentMsg = await conn.sendMessage(from, {
             image: { url: data.thumbnail},
@@ -86,7 +106,7 @@ const sentMsg = await conn.sendMessage(from, {
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
                     newsletterJid: '120363382823666763@newslette',
-                    newsletterName: "Aʅҽxα 🥷",
+                    newsletterName: "DARK-SILENCE-MD🥷",
                     serverMessageId: 00
                 }
             }
