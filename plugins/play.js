@@ -1,7 +1,7 @@
 const { cmd, commands } = require('../lib/command');
 const yts = require('yt-search');
 const { fetchJson } = require('../lib/functions');
-const  { ytmp3 }= require('./lib/scrab')
+const  { ytmp3 }= require('../lib/scrab')
 
 // Function to extract the video ID from youtu.be or YouTube links
 function extractYouTubeId(url) {
