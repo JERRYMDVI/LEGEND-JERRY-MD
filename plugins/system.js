@@ -138,7 +138,7 @@ let repo =`
 
 *[ •  LEGEND-JERRY-MD - REPO ‎ • ]*
 *╭┈───────────────•*
-*│  ◦* *https://github.com/Rafimayo/Jerry_md*
+*│  ◦* *https://github.com/JERRYMDV1/LEGEND-JERRY-MD*
 *╰┈───────────────•*
 
 *[ •  SUPPORT - GROUP‎ • ]*
@@ -165,7 +165,7 @@ externalAdReply: {
 title: 'LEGEND-JERRY-MD',
 body: `${pushname}`,
 mediaType: 1,
-sourceUrl: "https://github.com/Rafimayo/Jerry_md" ,
+sourceUrl: "https://github.com/JERRYMDV1/LEGEND-JERRY-MD" ,
 thumbnailUrl: "https://files.catbox.moe/eqls1l" ,
 renderLargerThumbnail: true,
 showAdAttribution: true
